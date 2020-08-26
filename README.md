@@ -2,8 +2,15 @@
 
 ## What is Django PDF Reactor?
 
-Combines PDFGen wrapper for Pyppeteer with Django Channels Worker backend.
-It supports multiple
+Combines PDFGen wrapper for Pyppeteer to create PDF files in Django. Support for async generation in Django Channels worker or with Django 3.1 async views.
+
+### Channels
+
+More about generating PDF in channels with Websocket support.
+
+### Async view
+
+More about generating PDF in async view
 
 ### Support for PDF/A
 
@@ -38,4 +45,3 @@ Other key elements to PDF/A compatibility include:
 
 - [PDFGen-Python](https://pypi.org/project/pdfgen/)
 - [Pyppeteer](https://pypi.org/project/pyppeteer/)
-
