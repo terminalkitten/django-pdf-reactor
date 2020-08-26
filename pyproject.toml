@@ -17,6 +17,7 @@ django-channels-graphql-ws = "^0.7.4"
 channels = "^2.4.0"
 channels-redis = "^3.0.1"
 nanoid = "^2.0.0"
+pdoc = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 
