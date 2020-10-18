@@ -1,0 +1,200 @@
+{% csrf_token %} {% load static %}
+
+<!DOCTYPE html>
+<html class="antialiased bg-white">
+
+<head>
+    <meta charset="utf-8" />
+    <title>PDF Reactor</title>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'pdf/css/tailwind-with-print.css' %}">
+</head>
+
+<body>
+
+    <!-- Progress -->
+    <div id="progress" class="hidden w-full bg-gray-200">
+        <div class="py-1 text-xs leading-none bg-blue-500 animate-progress"></div>
+    </div>
+
+
+    <div class="flex flex-col">
+
+        <!-- PDF -->
+        <div class="flex flex-row p-4 bg-gray-200 print:hidden">
+            <button id="create-pdf" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
+                Create PDF
+            </button>
+        </div>
+
+        <div class="flex flex-col p-6 print:p-16 print:font-print">
+
+            <!-- Header -->
+            <div class="flex flex-row">
+                <div class="flex flex-row items-center flex-1">
+                    <img width="90" height="90" src="{% static 'pdf/images/logo.png'%}" />
+                    <h2 class="pl-4 text-2xl font-extrabold">Proud Project</h2>
+                </div>
+                <div class="flex flex-col items-end flex-1 text-sm">
+                    <p>
+                        Invoice number: #089002 </p>
+                    <p>
+                        Date: 01/01/1979
+                    </p>
+                </div>
+            </div>
+
+            <!-- Customer -->
+            <div class="flex flex-row mt-4">
+                <div class="flex flex-col flex-1">
+                    <h3 class="font-bold text-1xl">Customer</h3>
+
+                    <p>
+                        Peacock Inc.
+                    </p>
+                    <p>New Haeven 1234</p>
+                    <p>WS38939 5-1 AG</p>
+
+
+                </div>
+                <div class="flex flex-col items-end flex-1">
+                    <h3 class="font-bold text-1xl">Seller</h3>
+
+                    <p>
+                        Reactor Inc.
+                    </p>
+                    <p>DjangoWeb 1392</p>
+                    <p>29982XX ALB</p>
+
+                </div>
+            </div>
+
+            <!-- Products -->
+            <div class="min-w-full mt-8">
+                <table class="min-w-full table-auto">
+                    <thead align="left">
+                        <tr>
+                            <th class="px-4 py-2">#</th>
+                            <th class="px-4 py-2">Item</th>
+                            <th class="px-4 py-2">Description</th>
+                            <th class="px-4 py-2">Unit Cost</th>
+                            <th class="px-4 py-2">Qty</th>
+                            <th class="px-4 py-2">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="px-4 py-2">1</td>
+                            <td class="px-4 py-2">Origin License</td>
+                            <td class="px-4 py-2">Extended License</td>
+                            <td class="px-4 py-2">$999,00</td>
+                            <td class="px-4 py-2">1</td>
+                            <td class="px-4 py-2">$999,00</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2">2</td>
+                            <td class="px-4 py-2">Custom Services</td>
+                            <td class="px-4 py-2">Instalation and Customization (cost per hour)</td>
+                            <td class="px-4 py-2">$150,00</td>
+                            <td class="px-4 py-2">20</td>
+                            <td class="px-4 py-2">$3.000,00</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2">3</td>
+                            <td class="px-4 py-2">Hosting</td>
+                            <td class="px-4 py-2">1 year subcription</td>
+                            <td class="px-4 py-2">$499,00</td>
+                            <td class="px-4 py-2">1</td>
+                            <td class="px-4 py-2">$499,00</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2">4</td>
+                            <td class="px-4 py-2">Platinum Support</td>
+                            <td class="px-4 py-2">1 year subcription 24/7</td>
+                            <td class="px-4 py-2">$3.999,00</td>
+                            <td class="px-4 py-2">1</td>
+                            <td class="px-4 py-2">$3.999,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr />
+            <div class="min-w-full pt-3 pb-3">
+                <table class="min-w-full">
+                    <thead>
+                        <tr>
+                            <th width="80%" align="right">Total</th>
+                            <th align="right">$13.999,00</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <!-- Terms and Conditions -->
+            <div class="flex flex-col mt-4">
+                <div class="mt-4">
+                    <h3 class="font-bold text-1xl">Terms and conditions</h3>
+                    <p>Payment is due within 15 days</p>
+                </div>
+                <div class="mt-4">
+                    <h3 class="font-bold text-1xl">Details</h3>
+                    <p>VAT: 12%</p>
+                    <p>VAT Number: 294.0109.1939109.344</p>
+                    <p>Bank: US-FBOA-49-29809180193 </p>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+
+        const pageProgressBar = document.getElementById("progress")
+
+        const csrftoken = document.querySelector("[name=csrfmiddlewaretoken]")
+            .value;
+        document
+            .querySelector("#create-pdf")
+            .addEventListener("click", createPdf);
+
+        async function createPdf() {
+
+            pageProgressBar.classList.remove("hidden")
+
+            const request = new Request(window.location.href, {
+                headers: {"X-CSRFToken": csrftoken}
+            });
+            let response = await fetch(request, {method: "POST"});
+
+            if (response.ok) {
+                let json = await response.json();
+                getStatus(json.job_id);
+            } else {
+                alert("HTTP-Error: " + response.status);
+            }
+        }
+
+        async function getStatus(jobId) {
+
+            const statusSocket = new WebSocket(
+                "ws://" + window.location.host + "/status/" + jobId + "/"
+            );
+
+            statusSocket.binaryType = 'blob'
+
+            statusSocket.onmessage = function (e) {
+                pageProgressBar.classList.add("hidden")
+                saveAs(e.data, 'data.pdf');
+            };
+
+            statusSocket.onclose = function (e) {
+                console.error("Status socket closed unexpectedly");
+            };
+        }
+    </script>
+</body>
+
+</html>

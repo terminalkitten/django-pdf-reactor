@@ -1,0 +1,13 @@
+{
+  "name": "django-pdf-reactor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build-css": "tailwindcss build -o demo/pdf/static/pdf/css/tailwind-with-print.css"
+  },
+  "dependencies": {
+    "tailwindcss": "^1.7.3"
+  }
+}
