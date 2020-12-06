@@ -1,6 +1,7 @@
-import pdfgen
-from io import BytesIO
+import pdfmate
 import asyncio
+
+from io import BytesIO
 
 from django.utils.decorators import classonlymethod
 
@@ -20,9 +21,12 @@ class PdfAsyncView(View):
         return view
 
     async def post(self, request):
-        path = await pdfgen.from_url(
+
+        path = await pdfmate.from_url(
             request.build_absolute_uri(), None, options={'printBackground': True}
         )
+
+        # get filestream async generated file
         file_stream = BytesIO(path)
 
         # generate downloadable file
