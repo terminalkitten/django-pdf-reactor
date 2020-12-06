@@ -972,7 +972,6 @@ table {
     <li class="set"><h3><a href="#header-variables">Module variables</a></h3>
       
   <ul>
-    <li class="mono"><a href="#pdf_reactor.consumers.PDF_REACTOR_CONFIG">PDF_REACTOR_CONFIG</a></li>
     <li class="mono"><a href="#pdf_reactor.consumers.logger">logger</a></li>
   </ul>
 
@@ -1039,24 +1038,19 @@ table {
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pdf_reactor.consumers', this);">Show source &equiv;</a></p>
   <div id="source-pdf_reactor.consumers" class="source">
-    <pre><code>import json
-import os
-import tempfile
-import time
-
+    <pre><code>import os
 import logging
 
-import pdfgen
-from asgiref.sync import async_to_sync
+import pdfmate
+from io import BytesIO
 from channels.consumer import AsyncConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer
-from channels.layers import get_channel_layer
-from pdf_reactor.settings import PDF_REACTOR_CONFIG
+
 
 logger = logging.getLogger('pdf_reactor')
 
 
-pdfgen.configuration(pyppeteer={'emulateMedia': 'print'})
+pdfmate.configuration(pyppeteer={'emulateMedia': 'print'})
 
 
 def split_filepath(path):
@@ -1072,7 +1066,7 @@ class PdfReactorStatusConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def send_status(self, params):
-        await self.send(text_data=json.dumps(params))
+        await self.send(bytes_data=params['blob'],)
 
 
 class PdfReactorConsumer(AsyncConsumer):
@@ -1084,22 +1078,11 @@ class PdfReactorConsumer(AsyncConsumer):
 
         logger.info(f'[pdf-reactor] Started job - {job_id}')
 
-        await self.channel_layer.group_send(
-            job_id, {"type": "send_status", "status": "started", "job_id": job_id},
-        )
-
-        path = await pdfgen.from_url(url, output, options=options)
-        filename, path = split_filepath(path)
+        path = await pdfmate.from_url(url, None, options=options)
+        file_stream = BytesIO(path)
 
         await self.channel_layer.group_send(
-            job_id,
-            {
-                "type": "send_status",
-                "status": "done",
-                "job_id": job_id,
-                "filename": filename,
-                "path": path,
-            },
+            job_id, {"type": "send_status", "blob": file_stream.getvalue(),},
         )
 
         logger.info(f'[pdf-reactor] Finished job - {job_id}')
@@ -1111,14 +1094,6 @@ class PdfReactorConsumer(AsyncConsumer):
 
   <section id="section-items">
     <h2 class="section-title" id="header-variables">Module variables</h2>
-      <div class="item">
-      <p id="pdf_reactor.consumers.PDF_REACTOR_CONFIG" class="name">var <span class="ident">PDF_REACTOR_CONFIG</span></p>
-      
-  
-  <div class="source_cont">
-</div>
-
-      </div>
       <div class="item">
       <p id="pdf_reactor.consumers.logger" class="name">var <span class="ident">logger</span></p>
       
@@ -1173,22 +1148,11 @@ on their type.</p></div>
 
         logger.info(f'[pdf-reactor] Started job - {job_id}')
 
-        await self.channel_layer.group_send(
-            job_id, {"type": "send_status", "status": "started", "job_id": job_id},
-        )
-
-        path = await pdfgen.from_url(url, output, options=options)
-        filename, path = split_filepath(path)
+        path = await pdfmate.from_url(url, None, options=options)
+        file_stream = BytesIO(path)
 
         await self.channel_layer.group_send(
-            job_id,
-            {
-                "type": "send_status",
-                "status": "done",
-                "job_id": job_id,
-                "filename": filename,
-                "path": path,
-            },
+            job_id, {"type": "send_status", "blob": file_stream.getvalue(),},
         )
 
         logger.info(f'[pdf-reactor] Finished job - {job_id}')
@@ -1283,20 +1247,10 @@ on their type.</p></div>
     output = params['output']
     options = params['options']
     logger.info(f'[pdf-reactor] Started job - {job_id}')
+    path = await pdfmate.from_url(url, None, options=options)
+    file_stream = BytesIO(path)
     await self.channel_layer.group_send(
-        job_id, {"type": "send_status", "status": "started", "job_id": job_id},
-    )
-    path = await pdfgen.from_url(url, output, options=options)
-    filename, path = split_filepath(path)
-    await self.channel_layer.group_send(
-        job_id,
-        {
-            "type": "send_status",
-            "status": "done",
-            "job_id": job_id,
-            "filename": filename,
-            "path": path,
-        },
+        job_id, {"type": "send_status", "blob": file_stream.getvalue(),},
     )
     logger.info(f'[pdf-reactor] Finished job - {job_id}')
 </code></pre>
@@ -1348,7 +1302,7 @@ for the WebSocket handling model that other applications can build on.</p></div>
         await self.accept()
 
     async def send_status(self, params):
-        await self.send(text_data=json.dumps(params))
+        await self.send(bytes_data=params['blob'],)
 </code></pre>
   </div>
 </div>
@@ -1600,7 +1554,7 @@ for the WebSocket handling model that other applications can build on.</p></div>
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pdf_reactor.consumers.PdfReactorStatusConsumer.send_status', this);">Show source &equiv;</a></p>
   <div id="source-pdf_reactor.consumers.PdfReactorStatusConsumer.send_status" class="source">
     <pre><code>async def send_status(self, params):
-    await self.send(text_data=json.dumps(params))
+    await self.send(bytes_data=params['blob'],)
 </code></pre>
   </div>
 </div>
