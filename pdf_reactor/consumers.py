@@ -2,7 +2,7 @@ import json
 import os
 import logging
 
-import pdfgen
+import pdfmate
 from io import BytesIO
 from channels.consumer import AsyncConsumer
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -11,7 +11,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 logger = logging.getLogger('pdf_reactor')
 
 
-pdfgen.configuration(pyppeteer={'emulateMedia': 'print'})
+pdfmate.configuration(pyppeteer={'emulateMedia': 'print'})
 
 
 def split_filepath(path):
@@ -39,9 +39,7 @@ class PdfReactorConsumer(AsyncConsumer):
 
         logger.info(f'[pdf-reactor] Started job - {job_id}')
 
-        path = await pdfgen.from_url(url, None, options=options)
-        # filename, path = split_filepath(path)
-
+        path = await pdfmate.from_url(url, None, options=options)
         file_stream = BytesIO(path)
 
         await self.channel_layer.group_send(
