@@ -10,7 +10,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 logger = logging.getLogger('pdf_reactor')
 
 
-pdfmate.configuration(pyppeteer={'emulateMedia': 'print'})
+pdfmate.configuration(options={'debug': False}, pyppeteer={'emulateMedia': 'print'})
 
 
 def split_filepath(path):
