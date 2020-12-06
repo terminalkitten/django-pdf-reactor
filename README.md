@@ -2,7 +2,7 @@
 
 ## What is Django PDF Reactor?
 
-Combines PDFGen wrapper for Pyppeteer to create PDF files in Django. Support for async generation in Django Channels worker or with Django 3.1 async views.
+Use PDFGen wrapper for Pyppeteer to create PDF files in Django. Support for async generation in Django Channels worker or with Django 3.1 async views.
 
 ### Channels
 
@@ -11,6 +11,28 @@ More about generating PDF in channels with Websocket support.
 ### Async view
 
 More about generating PDF in async view
+
+### Stunnel Support
+
+Chromium will ot visit https://localhost:8000, so run
+
+    brew install stunnel
+
+Add ssl_proxy file
+
+    pid=
+    cert=/usr/local/etc/stunnel/stunnel.pem
+    foreground=yes
+    debug=7
+
+    [https]
+    accept=8000
+    connect=8001
+    TIMEOUTclose=1
+
+Start
+
+    sudo stunnel ssl_proxy
 
 ### Support for PDF/A
 
