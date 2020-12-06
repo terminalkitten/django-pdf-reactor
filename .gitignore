@@ -1,3 +1,7 @@
+# Stunnel
+demo/rootCA.*
+demo/ssl_proxy
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

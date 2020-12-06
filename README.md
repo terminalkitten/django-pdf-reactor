@@ -14,7 +14,7 @@ More about generating PDF in async view
 
 ### Stunnel Support
 
-Chromium will ot visit https://localhost:8000, so run
+Chromium will not visit https://localhost:8000, so run
 
     brew install stunnel
 
