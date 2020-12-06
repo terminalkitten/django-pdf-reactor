@@ -7,13 +7,31 @@
 
 Use PDFGen wrapper for Pyppeteer to create PDF files in Django. Support for async generation in Django Channels worker or with Django 3.1 async views.
 
+### Run demo
+
+    cd demo
+    make worker
+    make start
+
+Read more about tunnels below
+
 ### Channels
 
+s
 More about generating PDF in channels with Websocket support.
 
 ### Async view
 
 More about generating PDF in async view
+
+### Ngrok Support
+
+Chromium cannot visit https without valid certificate without a lot of steps.
+You should tunnnel your dev server:
+
+    ngrok http 8000
+
+Now add ngrok url to `ALLOWED_HOSTS`
 
 ### Stunnel Support
 
