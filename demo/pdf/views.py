@@ -21,4 +21,4 @@ class PdfWebsocketView(View):
         return JsonResponse({'job_id': job_id})
 
     def get(self, request):
-        return render(request, 'pdf/index.html')
+        return render(request, 'pdf/index_socket.html')
